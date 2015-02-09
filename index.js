@@ -44,16 +44,27 @@ PluginBase.prototype.start = function(host, callback) {
 
 module.exports = {
 
+  /**
+   * 添加插件并自动执行
+   * @param {string}   name     插件名称
+   * @param {function} starter  插件启动器
+   * @param {function} callback 插件回调
+   */
   addPlugin: function(name, starter, callback) {
     if (!this._plugins) {
       this._plugins = {};
     }
 
-    this.__plugins[name] = new PluginBase(name, starter).start(this, callback);
+    this._plugins[name] = new PluginBase(name, starter).start(this, callback);
   },
 
+  /**
+   * 根据插件名称获取插件实例
+   * @param  {string} name 插件名称
+   * @return {object}      插件实例
+   */
   getPlugin: function(name) {
-    return this.__plugins[name];
+    return this._plugins[name];
   }
 
 };
