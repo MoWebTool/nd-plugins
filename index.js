@@ -1,5 +1,5 @@
 /**
- * @module: nd-pluggable
+ * @module: nd-plugins
  * @author: crossjs <liwenfu@crossjs.com> - 2015-02-09 17:28:21
  */
 

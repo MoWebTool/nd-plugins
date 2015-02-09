@@ -1,11 +1,11 @@
 'use strict';
 
 var expect = require('expect.js');
-var Pluggable = require('../index');
+var Plugins = require('../index');
 
 /*globals describe, it*/
 
-describe('nd-pluggable', function() {
+describe('nd-plugins', function() {
 
   it('normal usage', function() {
 
