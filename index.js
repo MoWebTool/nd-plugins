@@ -8,7 +8,7 @@
 /**
  * @constructor
  * @param {string}    name    插件名称，宿主内唯一
- * @param {function}  starter 插件启动器，必须返回当前插件实例
+ * @param {function}  starter 插件启动器
  */
 var PluginBase = function(name, starter) {
   this.name = name;
@@ -27,8 +27,7 @@ PluginBase.prototype.ready = function() {
 /**
  * 启动插件
  * @param  {object}   host     宿主
- * @param  {function} callback 插件就绪回调函数，接收两个参数：host、plugin
- * @return {object}            当前插件实例
+ * @param  {function} callback 插件就绪回调函数，上下文为 host，传递参数为 plugin
  */
 PluginBase.prototype.start = function(host, callback) {
   if (host) {
@@ -39,7 +38,7 @@ PluginBase.prototype.start = function(host, callback) {
     this.callback = callback;
   }
 
-  return this.starter(host);
+  this.starter(host);
 };
 
 module.exports = {
@@ -51,11 +50,15 @@ module.exports = {
    * @param {function} callback 插件回调
    */
   addPlugin: function(name, starter, callback) {
+    var plugin = new PluginBase(name, starter);
+
     if (!this._plugins) {
       this._plugins = {};
     }
 
-    this._plugins[name] = new PluginBase(name, starter).start(this, callback);
+    this._plugins[name] = plugin;
+
+    plugin.start(this, callback);
   },
 
   /**
