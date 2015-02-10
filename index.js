@@ -67,7 +67,7 @@ module.exports = {
    * @return {object}      插件实例
    */
   getPlugin: function(name) {
-    return this._plugins[name];
+    return this._plugins && this._plugins[name];
   }
 
 };
