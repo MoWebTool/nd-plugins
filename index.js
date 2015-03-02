@@ -5,6 +5,8 @@
 
 'use strict';
 
+var Events = require('nd-events');
+
 /**
  * @constructor
  * @param {string}    name    插件名称，宿主内唯一
@@ -40,6 +42,8 @@ PluginBase.prototype.start = function(host, callback) {
 
   this.starter(host);
 };
+
+Events.mixTo(PluginBase);
 
 module.exports = {
 

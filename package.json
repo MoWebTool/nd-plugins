@@ -1,6 +1,6 @@
 {
   "name": "nd-plugins",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "使得组件支持插件模式",
   "keywords": [],
   "homepage": "https://github.com/ndfront/nd-plugins",
@@ -28,6 +28,7 @@
   "spm": {
     "main": "index.js",
     "dependencies": {
+      "nd-events": "0.0.1"
     },
     "devDependencies": {
       "expect.js": "0.3.1"
