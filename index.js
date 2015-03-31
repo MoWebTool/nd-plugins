@@ -45,7 +45,11 @@ PluginBase.prototype.async = function() {
  * 供 starter 调用，一般在插件就绪时调用
  */
 PluginBase.prototype.ready = function() {
-  this.trigger('ready');
+  // 仅执行一次
+  if (!this._ready) {
+    this._ready = true;
+    this.trigger('ready');
+  }
 };
 
 /**
