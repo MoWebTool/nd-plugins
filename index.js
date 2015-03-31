@@ -30,12 +30,14 @@ PluginBase.prototype._bind = function(events) {
   }
 };
 
-// PluginBase.prototype.destroy = function() {
-  // this.trigger('destroy');
-// };
-
 /**
  * 异步调用
+ * ```
+ * this.async();
+ * setTimeout(function() {
+ *   that.start();
+ * });
+ * ```
  */
 PluginBase.prototype.async = function() {
   this._async = true;
@@ -83,6 +85,8 @@ PluginBase.prototype.start = function(callbacks) {
 
 Events.mixTo(PluginBase);
 
+var _plugins = {};
+
 module.exports = {
 
   /**
@@ -92,19 +96,15 @@ module.exports = {
    * @param {function} callbacks  插件回调
    */
   addPlugin: function(name, starter, callbacks) {
-    if (name && typeof name === 'object') {
-      starter = name.plugin;
-      callbacks = name.callbacks;
-      name = name.name;
-    }
-
     var plugin = new PluginBase(name, starter);
 
-    if (!this._plugins) {
-      this._plugins = {};
+    var cached = _plugins[this.cid];
+
+    if (!cached) {
+      cached = _plugins[this.cid] = {};
     }
 
-    this._plugins[name] = plugin;
+    cached[name] = plugin;
 
     plugin.host = this;
     plugin.start(callbacks);
@@ -116,7 +116,28 @@ module.exports = {
    * @return {object}           插件实例
    */
   getPlugin: function(name) {
-    return this._plugins && this._plugins[name];
+    var cached = _plugins[this.cid];
+    return cached && cached[name];
+  },
+
+  /**
+   * 初始化插件
+   */
+  initPlugins: function() {
+    // must be object
+    var plugins = this.get('plugins');
+    var key;
+    var plugin;
+
+    for (key in plugins) {
+      if (plugins.hasOwnProperty(key)) {
+        plugin = plugins[key];
+
+        if (!plugin.disabled) {
+          this.addPlugin(key, plugin.plugin, plugin.callbacks);
+        }
+      }
+    }
   }
 
 };
