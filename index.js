@@ -92,6 +92,12 @@ module.exports = {
    * @param {function} callbacks  插件回调
    */
   addPlugin: function(name, starter, callbacks) {
+    if (name && typeof name === 'object') {
+      starter = name.plugin;
+      callbacks = name.callbacks;
+      name = name.name;
+    }
+
     var plugin = new PluginBase(name, starter);
 
     if (!this._plugins) {
