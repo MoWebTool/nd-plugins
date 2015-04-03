@@ -5,6 +5,7 @@
 
 'use strict';
 
+var $ = require('jquery');
 var Events = require('nd-events');
 
 /**
@@ -124,20 +125,23 @@ module.exports = {
    * 初始化插件
    */
   initPlugins: function() {
-    // must be object
-    var plugins = this.get('plugins');
-    var key;
-    var plugin;
+    var that = this;
+    var pluginCfg = this.get('pluginCfg');
 
-    for (key in plugins) {
-      if (plugins.hasOwnProperty(key)) {
-        plugin = plugins[key];
-
-        if (!plugin.disabled) {
-          this.addPlugin(key, plugin.plugin, plugin.callbacks);
-        }
+    $.each(this.Plugins.concat(this.get('plugins')), function(i, plugin) {
+      // pluginEntry
+      if (plugin.pluginEntry) {
+        plugin = plugin.pluginEntry;
       }
-    }
+
+      if (plugin.name in pluginCfg) {
+        $.extend(true, plugin, pluginCfg[plugin.name]);
+      }
+
+      if (!plugin.disabled) {
+        that.addPlugin(plugin.name, plugin.starter, plugin.listeners);
+      }
+    });
   }
 
 };
