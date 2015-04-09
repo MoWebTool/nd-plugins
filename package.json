@@ -27,6 +27,7 @@
   "spm": {
     "main": "index.js",
     "dependencies": {
+      "jquery": "1.11.1",
       "nd-events": "0.0.1"
     },
     "devDependencies": {
