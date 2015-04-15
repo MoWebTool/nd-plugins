@@ -135,7 +135,8 @@ module.exports = {
       }
 
       if (plugin.name in pluginCfg) {
-        $.extend(true, plugin, pluginCfg[plugin.name]);
+        // 避免直接修改
+        plugin = $.extend(true, {}, plugin, pluginCfg[plugin.name]);
       }
 
       if (!plugin.disabled) {
