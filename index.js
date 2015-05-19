@@ -15,6 +15,7 @@ var Events = require('nd-events');
  */
 var PluginBase = function(name, starter) {
   this.name = name;
+  this.options = {};
   this.starter = starter;
 };
 
@@ -22,13 +23,9 @@ var PluginBase = function(name, starter) {
  * 绑定事件
  */
 PluginBase.prototype._bind = function(events) {
-  var key;
-
-  for (key in events) {
-    if (events.hasOwnProperty(key)) {
-      this.on(key, events[key]);
-    }
-  }
+  Object.keys(events).forEach(function(key) {
+    this.on(key, events[key]);
+  }, this);
 };
 
 /**
@@ -57,7 +54,7 @@ PluginBase.prototype.ready = function() {
 
 /**
  * 启动插件
- * @param  {object}   host      宿主
+ * @param  {object}   host        宿主
  * @param  {function} callbacks   插件就绪回调函数，上下文为 host，传递参数为 plugin
  */
 PluginBase.prototype.start = function(callbacks) {
@@ -80,6 +77,22 @@ PluginBase.prototype.start = function(callbacks) {
   if (this.trigger('start') !== false) {
     if (!this._async) {
       this.starter();
+    }
+  }
+};
+
+PluginBase.prototype.getOptions = function(ns) {
+  return ns ? this.options[ns] : this.options;
+};
+
+PluginBase.prototype.setOptions = function(ns, data) {
+  if (typeof data === 'undefined') {
+    $.extend(this.options, ns);
+  } else {
+    if (ns in this.options) {
+      $.extend(this.options[ns], data);
+    } else {
+      this.options[ns] = data;
     }
   }
 };
@@ -118,7 +131,7 @@ module.exports = {
    */
   getPlugin: function(name) {
     var cached = _plugins[this.cid];
-    return cached && cached[name];
+    return name ? (cached && cached[name]) : (cached || {});
   },
 
   /**
@@ -128,7 +141,7 @@ module.exports = {
     var that = this;
     var pluginCfg = this.get('pluginCfg');
 
-    $.each(this.Plugins.concat(this.get('plugins')), function(i, plugin) {
+    $.each(this.get('plugins').concat(this.Plugins), function(i, plugin) {
       // pluginEntry
       if (plugin.pluginEntry) {
         plugin = plugin.pluginEntry;
