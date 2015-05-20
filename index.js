@@ -138,10 +138,10 @@ module.exports = {
    * 初始化插件
    */
   initPlugins: function() {
-    var that = this;
     var pluginCfg = this.get('pluginCfg');
+    var plugins = [[], [], []];
 
-    $.each(this.Plugins.concat(this.get('plugins')), function(i, plugin) {
+    this.Plugins.concat(this.get('plugins')).forEach(function(plugin) {
       // pluginEntry
       if (plugin.pluginEntry) {
         plugin = plugin.pluginEntry;
@@ -152,10 +152,20 @@ module.exports = {
         plugin = $.extend(true, {}, plugin, pluginCfg[plugin.name]);
       }
 
-      if (!plugin.disabled) {
-        that.addPlugin(plugin.name, plugin.starter, plugin.listeners);
+      if (plugin.disabled) {
+        return true;
       }
+
+      if (typeof plugin.priority === 'undefined') {
+        plugin.priority = 1;
+      }
+
+      plugins[plugin.priority].push(plugin);
     });
+
+    plugins[2].concat(plugins[1]).concat(plugins[0]).forEach(function(plugin) {
+      this.addPlugin(plugin.name, plugin.starter, plugin.listeners);
+    }, this);
   }
 
 };
