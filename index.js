@@ -116,6 +116,9 @@ module.exports = {
 
     if (!cached) {
       cached = _plugins[this.cid] = {};
+    } else if (name in cached) {
+      console.error('插件冲突，请保证 `name` 唯一性');
+      return;
     }
 
     cached[name] = plugin;
@@ -145,6 +148,11 @@ module.exports = {
       // pluginEntry
       if (plugin.pluginEntry) {
         plugin = plugin.pluginEntry;
+      }
+
+      if (!plugin.name) {
+        console.error('插件缺少 `name` 属性');
+        return true;
       }
 
       if (plugin.name in pluginCfg) {
