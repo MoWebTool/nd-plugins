@@ -141,7 +141,7 @@ module.exports = {
     var that = this;
     var pluginCfg = this.get('pluginCfg');
 
-    $.each(this.get('plugins').concat(this.Plugins), function(i, plugin) {
+    $.each(this.Plugins.concat(this.get('plugins')), function(i, plugin) {
       // pluginEntry
       if (plugin.pluginEntry) {
         plugin = plugin.pluginEntry;
