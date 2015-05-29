@@ -1,6 +1,7 @@
 /**
- * @module: nd-plugins
- * @author: crossjs <liwenfu@crossjs.com> - 2015-02-09 17:28:21
+ * @module Plugins
+ * @author crossjs <liwenfu@crossjs.com>
+ * @create 2015-02-09 17:28:21
  */
 
 'use strict';
@@ -101,6 +102,23 @@ Events.mixTo(PluginBase);
 
 var _plugins = {};
 
+function translateCfg(name, configs) {
+  var config = configs[name];
+
+  if (Array.isArray(config)) {
+    var _config = {};
+    var _orders = ['start', 'starter', 'ready'];
+
+    config.forEach(function(fn, i) {
+      fn && (_config[_orders[i]] = fn);
+    });
+
+    configs[name] = {
+      listeners: _config
+    };
+  }
+}
+
 module.exports = {
 
   /**
@@ -156,6 +174,8 @@ module.exports = {
       }
 
       if (plugin.name in pluginCfg) {
+        translateCfg(plugin.name, pluginCfg);
+
         // 避免直接修改
         plugin = $.extend(true, {}, plugin, pluginCfg[plugin.name]);
       }

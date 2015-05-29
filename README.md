@@ -1,8 +1,8 @@
 # nd-plugins
 
-[![spm version](http://spmjs.io/badge/nd-plugins)](http://spmjs.io/package/nd-plugins)
+[![spm version](http://spm.crossjs.com/badge/nd-plugins)](http://spm.crossjs.com/package/nd-plugins)
 
-> 使得组件支持插件（支持事件的插件）模式
+> mixin to widget，使得组件支持插件（支持事件的插件）模式
 
 ## 安装
 
@@ -13,6 +13,6 @@ $ spm install nd-plugins --save
 ## 使用
 
 ```js
-var Plugins = require('nd-plugins');
-// use Plugins
+var plugins = require('nd-plugins');
+// use plugins
 ```
