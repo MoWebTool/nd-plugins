@@ -1,7 +1,6 @@
 /**
  * @module Plugins
  * @author crossjs <liwenfu@crossjs.com>
- * @create 2015-02-09 17:28:21
  */
 
 'use strict';
