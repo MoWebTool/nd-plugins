@@ -1,4 +1,0 @@
-{
-  "插件冲突，请保证 `name` 唯一性": "Plugin conflict! Please make sure the uniqueness of `name`!",
-  "插件缺少 `name` 属性": "Plugin lacks of `name` attribute."
-}

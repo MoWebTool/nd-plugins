@@ -6,6 +6,7 @@
 'use strict';
 
 var $ = require('jquery');
+var __ = require('nd-i18n');
 var Events = require('nd-events');
 
 /**
@@ -134,7 +135,7 @@ module.exports = {
     if (!cached) {
       cached = _plugins[this.cid] = {};
     } else if (name in cached) {
-      console.error('插件冲突，请保证 `name` 唯一性');
+      console.error(__('插件冲突，请保证 `name` 唯一性'));
       return;
     }
 
@@ -168,7 +169,7 @@ module.exports = {
       }
 
       if (!plugin.name) {
-        console.error('插件缺少 `name` 属性');
+        console.error(__('插件缺少 `name` 属性'));
         return true;
       }
 
