@@ -1,6 +1,6 @@
 {
   "name": "nd-plugins",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "使得组件支持插件模式",
   "keywords": [],
   "homepage": "https://github.com/ndfront/nd-plugins",
@@ -22,9 +22,9 @@
   "licenses": "MIT",
   "main": "index.js",
   "dependencies": {
-    "jquery": "^1.11.1",
     "nd-events": "^3.0.0",
-    "nd-i18n": "^3.0.0"
+    "nd-i18n": "^3.0.0",
+    "nd-jquery": "^2.2.1"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
