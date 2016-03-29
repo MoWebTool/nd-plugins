@@ -3,11 +3,11 @@
  * @author crossjs <liwenfu@crossjs.com>
  */
 
-'use strict';
+'use strict'
 
-var $ = require('nd-jquery');
-var __ = require('nd-i18n');
-var Events = require('nd-events');
+var $ = require('nd-jquery')
+var __ = require('nd-i18n')
+var Events = require('nd-events')
 
 /**
  * @constructor
@@ -15,19 +15,19 @@ var Events = require('nd-events');
  * @param {function}  starter   插件启动器
  */
 var PluginBase = function(name, starter) {
-  this.name = name;
-  this.options = {};
-  this.starter = starter;
-};
+  this.name = name
+  this.options = {}
+  this.starter = starter
+}
 
 /**
  * 绑定事件
  */
 PluginBase.prototype._bind = function(events) {
   Object.keys(events).forEach(function(key) {
-    this.on(key, events[key]);
-  }, this);
-};
+    this.on(key, events[key])
+  }, this)
+}
 
 /**
  * 异步调用
@@ -39,8 +39,8 @@ PluginBase.prototype._bind = function(events) {
  * ```
  */
 PluginBase.prototype.async = function() {
-  this._async = true;
-};
+  this._async = true
+}
 
 /**
  * 供 starter 调用，一般在插件就绪时调用
@@ -48,10 +48,10 @@ PluginBase.prototype.async = function() {
 PluginBase.prototype.ready = function() {
   // 仅执行一次
   if (!this._ready) {
-    this._ready = true;
-    this.trigger('ready');
+    this._ready = true
+    this.trigger('ready')
   }
-};
+}
 
 /**
  * 启动插件
@@ -60,8 +60,8 @@ PluginBase.prototype.ready = function() {
  */
 PluginBase.prototype.start = function(callbacks) {
   if (this._async) {
-    this.starter();
-    return;
+    this.starter()
+    return
   }
 
   if (callbacks) {
@@ -69,53 +69,54 @@ PluginBase.prototype.start = function(callbacks) {
     if (typeof callbacks === 'function') {
       callbacks = {
         ready: callbacks
-      };
+      }
     }
 
-    this._bind(callbacks);
+    this._bind(callbacks)
   }
 
   if (this.trigger('start') !== false) {
     if (!this._async) {
-      this.starter();
+      this.starter()
     }
   }
-};
+}
 
 PluginBase.prototype.getOptions = function(ns) {
-  return ns ? this.options[ns] : this.options;
-};
+  return ns ? this.options[ns] : this.options
+}
 
 PluginBase.prototype.setOptions = function(ns, data) {
   if (typeof data === 'undefined') {
-    $.extend(this.options, ns);
+    $.extend(this.options, ns)
   } else {
     if (ns in this.options) {
-      $.extend(this.options[ns], data);
+      $.extend(this.options[ns], data)
     } else {
-      this.options[ns] = data;
+      this.options[ns] = data
     }
   }
-};
+}
 
-Events.mixTo(PluginBase);
+Events.mixTo(PluginBase)
 
-var _plugins = {};
+var _plugins = {}
 
 function translateCfg(name, configs) {
-  var config = configs[name];
+  var config = configs[name]
 
   if (Array.isArray(config)) {
-    var _config = {};
-    var _orders = ['start', 'starter', 'ready'];
+    var _config = {}
+    var _orders = ['start', 'starter', 'ready']
 
     config.forEach(function(fn, i) {
-      fn && (_config[_orders[i]] = fn);
-    });
+      fn && (_config[_orders[i]] = fn)
+    })
 
     configs[name] = {
+      disabled: false,
       listeners: _config
-    };
+    }
   }
 }
 
@@ -128,21 +129,21 @@ module.exports = {
    * @param {function} callbacks  插件回调
    */
   addPlugin: function(name, starter, callbacks) {
-    var plugin = new PluginBase(name, starter);
+    var plugin = new PluginBase(name, starter)
 
-    var cached = _plugins[this.cid];
+    var cached = _plugins[this.cid]
 
     if (!cached) {
-      cached = _plugins[this.cid] = {};
+      cached = _plugins[this.cid] = {}
     } else if (name in cached) {
-      console.error(__('插件冲突，请保证 `name` 唯一性'));
-      return;
+      console.error(__('插件冲突，请保证 `name` 唯一性'))
+      return
     }
 
-    cached[name] = plugin;
+    cached[name] = plugin
 
-    plugin.host = this;
-    plugin.start(callbacks);
+    plugin.host = this
+    plugin.start(callbacks)
   },
 
   /**
@@ -151,49 +152,49 @@ module.exports = {
    * @return {object}           插件实例
    */
   getPlugin: function(name) {
-    var cached = _plugins[this.cid];
-    return name ? (cached && cached[name]) : (cached || {});
+    var cached = _plugins[this.cid]
+    return name ? (cached && cached[name]) : (cached || {})
   },
 
   /**
    * 初始化插件
    */
   initPlugins: function() {
-    var pluginCfg = this.get('pluginCfg');
-    var plugins = [[], [], []];
+    var pluginCfg = this.get('pluginCfg')
+    var plugins = [[], [], []]
 
     this.Plugins.concat(this.get('plugins')).forEach(function(plugin) {
       // pluginEntry
       if (plugin.pluginEntry) {
-        plugin = plugin.pluginEntry;
+        plugin = plugin.pluginEntry
       }
 
       if (!plugin.name) {
-        console.error(__('插件缺少 `name` 属性'));
-        return true;
+        console.error(__('插件缺少 `name` 属性'))
+        return true
       }
 
       if (plugin.name in pluginCfg) {
-        translateCfg(plugin.name, pluginCfg);
+        translateCfg(plugin.name, pluginCfg)
 
         // 避免直接修改
-        plugin = $.extend(true, {}, plugin, pluginCfg[plugin.name]);
+        plugin = $.extend(true, {}, plugin, pluginCfg[plugin.name])
       }
 
       if (plugin.disabled) {
-        return true;
+        return true
       }
 
       if (typeof plugin.priority === 'undefined') {
-        plugin.priority = 1;
+        plugin.priority = 1
       }
 
-      plugins[plugin.priority].push(plugin);
-    });
+      plugins[plugin.priority].push(plugin)
+    })
 
     plugins[2].concat(plugins[1]).concat(plugins[0]).forEach(function(plugin) {
-      this.addPlugin(plugin.name, plugin.starter, plugin.listeners);
-    }, this);
+      this.addPlugin(plugin.name, plugin.starter, plugin.listeners)
+    }, this)
   }
 
-};
+}
