@@ -1,6 +1,6 @@
 {
   "name": "nd-plugins",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "使得组件支持插件模式",
   "keywords": [],
   "homepage": "https://github.com/ndfront/nd-plugins",

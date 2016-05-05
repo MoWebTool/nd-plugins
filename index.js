@@ -65,7 +65,6 @@ PluginBase.prototype.start = function(callbacks) {
   }
 
   if (callbacks) {
-
     if (typeof callbacks === 'function') {
       callbacks = {
         ready: callbacks
@@ -105,17 +104,34 @@ var _plugins = {}
 function translateCfg(name, configs) {
   var config = configs[name]
 
+  if (typeof config === 'boolean') {
+    configs[name] = {
+      disabled: !config
+    }
+  }
+
   if (Array.isArray(config)) {
     var _config = {}
     var _orders = ['start', 'starter', 'ready']
+    var starter
 
     config.forEach(function(fn, i) {
-      fn && (_config[_orders[i]] = fn)
+      if (fn) {
+        if (i === 1) {
+          starter = fn
+        } else {
+          _config[_orders[i]] = fn
+        }
+      }
     })
 
     configs[name] = {
       disabled: false,
       listeners: _config
+    }
+
+    if (starter) {
+      configs[name].starter = starter
     }
   }
 }
